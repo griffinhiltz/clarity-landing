@@ -1,0 +1,1250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clarity — Understand your health, at your pace</title>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,300;1,6..72,400;1,6..72,500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #f6f3ec;
+    --cream-dark: #eee9df;
+    --ink: #1a1a1a;
+    --ink-light: #2a2a2a;
+    --sage: #2d7a54;
+    --sage-light: #3a9968;
+    --sage-muted: rgba(45,122,84,0.08);
+    --sage-border: rgba(45,122,84,0.15);
+    --wheat: #c9b99a;
+    --linen: #e8ddd0;
+    --text-primary: #1a1a1a;
+    --text-secondary: #5a5a5a;
+    --text-muted: #8a8a8a;
+    --border: #ddd5c8;
+    --border-light: #e8e2d8;
+    --white: #ffffff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ── Utility ── */
+  .container {
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ── Grain overlay ── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 200px;
+  }
+
+  /* ── Navigation ── */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 20px 0;
+    transition: all 0.4s;
+    background: transparent;
+  }
+
+  nav.scrolled {
+    background: rgba(246,243,236,0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-light);
+    padding: 14px 0;
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  .nav-logo {
+    font-family: 'Newsreader', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink);
+    text-decoration: none;
+    letter-spacing: 0.3px;
+  }
+
+  .nav-logo span { color: var(--sage); }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+    font-weight: 400;
+  }
+
+  .nav-links a:hover { color: var(--ink); }
+
+  .nav-cta {
+    padding: 10px 24px !important;
+    background: var(--ink) !important;
+    color: var(--cream) !important;
+    border-radius: 100px;
+    font-weight: 500 !important;
+    transition: all 0.2s !important;
+  }
+
+  .nav-cta:hover {
+    background: var(--sage) !important;
+    color: var(--white) !important;
+  }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+  }
+
+  /* ── Hero ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 0 100px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 800px;
+    height: 800px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(45,122,84,0.04) 0%, transparent 60%);
+    top: 10%;
+    right: -200px;
+    pointer-events: none;
+  }
+
+  .hero::after {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,185,154,0.08) 0%, transparent 60%);
+    bottom: -100px;
+    left: -100px;
+    pointer-events: none;
+  }
+
+  .hero-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  @media (max-width: 900px) {
+    .hero-inner {
+      grid-template-columns: 1fr;
+      gap: 48px;
+      text-align: center;
+    }
+    .hero-left { display: flex; flex-direction: column; align-items: center; }
+  }
+
+  .hero-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--sage);
+    background: var(--sage-muted);
+    border: 1px solid var(--sage-border);
+    padding: 8px 18px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  .hero h1 {
+    font-family: 'Newsreader', serif;
+    font-size: clamp(38px, 5.5vw, 58px);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -1px;
+    color: var(--ink);
+    animation: fadeUp 0.7s ease 0.08s both;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--sage);
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    color: var(--text-secondary);
+    line-height: 1.85;
+    margin-top: 24px;
+    max-width: 460px;
+    animation: fadeUp 0.7s ease 0.16s both;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 14px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+    animation: fadeUp 0.7s ease 0.24s both;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 36px;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    border-radius: 100px;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-decoration: none;
+  }
+
+  .btn-primary:hover {
+    background: var(--sage);
+    color: var(--white);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 36px;
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-decoration: none;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--ink);
+    color: var(--ink);
+  }
+
+  /* ── Hero Mockup ── */
+  .hero-mockup-wrap {
+    animation: fadeUp 0.7s ease 0.32s both;
+  }
+
+  .hero-mockup {
+    background: var(--white);
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.06), 0 4px 20px rgba(0,0,0,0.03);
+    position: relative;
+  }
+
+  .mockup-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border-light);
+    background: var(--cream);
+  }
+
+  .mockup-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+
+  .mockup-content {
+    padding: 36px 32px 40px;
+  }
+
+  .mockup-topic-label {
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  .mockup-topic-title {
+    font-family: 'Newsreader', serif;
+    font-size: 26px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 6px;
+    line-height: 1.2;
+  }
+
+  .mockup-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .mockup-meta-dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--border);
+  }
+
+  .mockup-body {
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 2;
+  }
+
+  .mockup-link {
+    color: var(--sage);
+    text-decoration: none;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(45,122,84,0.2);
+    transition: all 0.15s;
+  }
+
+  .mockup-link:hover {
+    border-bottom-color: var(--sage);
+  }
+
+  .mockup-suggestions {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-light);
+  }
+
+  .mockup-suggestions-label {
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+
+  .mockup-suggestion {
+    font-size: 13px;
+    color: var(--text-muted);
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+    cursor: pointer;
+    transition: color 0.2s;
+  }
+
+  .mockup-suggestion:hover { color: var(--sage); }
+  .mockup-suggestion::before { content: '→ '; opacity: 0.4; }
+
+  /* ── Problem Section ── */
+  .problem {
+    padding: 120px 0;
+    border-top: 1px solid var(--border-light);
+    position: relative;
+  }
+
+  .problem-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+
+  @media (max-width: 800px) {
+    .problem-grid { grid-template-columns: 1fr; gap: 40px; }
+  }
+
+  .problem-left {}
+
+  .section-eyebrow {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+  }
+
+  .section-heading {
+    font-family: 'Newsreader', serif;
+    font-size: clamp(28px, 4vw, 40px);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+
+  .section-heading em {
+    font-style: italic;
+    color: var(--sage);
+  }
+
+  .section-body {
+    font-size: 16px;
+    color: var(--text-secondary);
+    line-height: 1.9;
+  }
+
+  .problem-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .problem-card {
+    padding: 28px 32px;
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    background: var(--white);
+    transition: all 0.25s;
+  }
+
+  .problem-card:hover {
+    border-color: var(--sage-border);
+    box-shadow: 0 4px 20px rgba(45,122,84,0.04);
+  }
+
+  .problem-card-icon {
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
+
+  .problem-card h4 {
+    font-family: 'Newsreader', serif;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+
+  .problem-card p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  /* ── How It Works ── */
+  .how {
+    padding: 120px 0;
+    border-top: 1px solid var(--border-light);
+    background: var(--white);
+  }
+
+  .how-header {
+    text-align: center;
+    max-width: 560px;
+    margin: 0 auto 72px;
+  }
+
+  .how-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+  }
+
+  @media (max-width: 760px) {
+    .how-steps { grid-template-columns: 1fr; }
+  }
+
+  .how-step {
+    text-align: center;
+    padding: 40px 28px;
+    border-radius: 16px;
+    border: 1px solid var(--border-light);
+    background: var(--cream);
+    transition: all 0.3s;
+    position: relative;
+  }
+
+  .how-step:hover {
+    border-color: var(--sage-border);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.04);
+  }
+
+  .how-step-number {
+    font-family: 'Newsreader', serif;
+    font-size: 48px;
+    font-weight: 300;
+    color: var(--sage);
+    opacity: 0.3;
+    margin-bottom: 16px;
+    line-height: 1;
+  }
+
+  .how-step h3 {
+    font-family: 'Newsreader', serif;
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    color: var(--ink);
+  }
+
+  .how-step p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+
+  /* ── Features ── */
+  .features {
+    padding: 120px 0;
+    border-top: 1px solid var(--border-light);
+  }
+
+  .features-header {
+    text-align: center;
+    max-width: 560px;
+    margin: 0 auto 72px;
+  }
+
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  @media (max-width: 700px) {
+    .features-grid { grid-template-columns: 1fr; }
+  }
+
+  .feature-card {
+    padding: 36px;
+    border: 1px solid var(--border-light);
+    border-radius: 16px;
+    background: var(--white);
+    transition: all 0.25s;
+  }
+
+  .feature-card:hover {
+    border-color: var(--sage-border);
+  }
+
+  .feature-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--sage-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .feature-card h3 {
+    font-family: 'Newsreader', serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 10px;
+  }
+
+  .feature-card p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+
+  /* ── Dual CTA ── */
+  .dual-cta {
+    padding: 120px 0;
+    border-top: 1px solid var(--border-light);
+    background: var(--white);
+  }
+
+  .dual-cta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+
+  @media (max-width: 760px) {
+    .dual-cta-grid { grid-template-columns: 1fr; }
+  }
+
+  .cta-card {
+    padding: 52px 48px;
+    border-radius: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-therapist {
+    background: var(--sage);
+    color: var(--white);
+  }
+
+  .cta-therapist::before {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%);
+    top: -80px;
+    right: -80px;
+    pointer-events: none;
+  }
+
+  .cta-patient {
+    background: var(--sage);
+    color: var(--white);
+  }
+
+  .cta-card-eyebrow {
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0.5;
+  }
+
+  .cta-card h3 {
+    font-family: 'Newsreader', serif;
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 16px;
+    line-height: 1.25;
+  }
+
+  .cta-card p {
+    font-size: 15px;
+    line-height: 1.8;
+    opacity: 0.7;
+    margin-bottom: 32px;
+  }
+
+  .cta-card .btn-on-dark {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 32px;
+    background: var(--sage);
+    color: var(--white);
+    border: none;
+    border-radius: 100px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-decoration: none;
+  }
+
+  .cta-card .btn-on-dark:hover {
+    background: var(--sage-light);
+    transform: translateY(-1px);
+  }
+
+  .cta-card .btn-on-light {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 32px;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    border-radius: 100px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s;
+    text-decoration: none;
+  }
+
+  .cta-card .btn-on-light:hover {
+    background: var(--sage);
+    color: var(--white);
+  }
+
+  /* ── Testimonial / Social Proof ── */
+  .social-proof {
+    padding: 100px 0;
+    border-top: 1px solid var(--border-light);
+    text-align: center;
+  }
+
+  .quote-block {
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  .quote-mark {
+    font-family: 'Newsreader', serif;
+    font-size: 72px;
+    color: var(--sage);
+    opacity: 0.2;
+    line-height: 0.5;
+    margin-bottom: 12px;
+  }
+
+  .quote-text {
+    font-family: 'Newsreader', serif;
+    font-size: 24px;
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  .quote-author {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .quote-author strong {
+    color: var(--text-secondary);
+  }
+
+  /* ── FAQ ── */
+  .faq {
+    padding: 120px 0;
+    border-top: 1px solid var(--border-light);
+    background: var(--white);
+  }
+
+  .faq-header {
+    text-align: center;
+    max-width: 560px;
+    margin: 0 auto 60px;
+  }
+
+  .faq-list {
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .faq-item {
+    border-bottom: 1px solid var(--border-light);
+    padding: 28px 0;
+    cursor: pointer;
+  }
+
+  .faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Newsreader', serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ink);
+    gap: 16px;
+  }
+
+  .faq-toggle {
+    font-size: 20px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    transition: transform 0.3s;
+  }
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, padding 0.35s ease;
+  }
+
+  .faq-answer-inner {
+    padding-top: 16px;
+    font-size: 15px;
+    color: var(--text-secondary);
+    line-height: 1.85;
+  }
+
+  .faq-item.open .faq-answer {
+    max-height: 300px;
+  }
+
+  .faq-item.open .faq-toggle {
+    transform: rotate(45deg);
+  }
+
+  /* ── Footer ── */
+  footer {
+    padding: 60px 0;
+    border-top: 1px solid var(--border-light);
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-family: 'Newsreader', serif;
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+
+  .footer-logo span { color: var(--sage); }
+
+  .footer-tagline {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 24px;
+  }
+
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    list-style: none;
+    margin-bottom: 32px;
+  }
+
+  .footer-links a {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--sage); }
+
+  .footer-legal {
+    font-size: 12px;
+    color: var(--text-muted);
+    opacity: 0.6;
+    max-width: 560px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* ── Disclaimer bar ── */
+  .disclaimer-bar {
+    background: var(--sage-muted);
+    border-bottom: 1px solid var(--sage-border);
+    padding: 10px 32px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--sage);
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Scroll reveal ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Waitlist form ── */
+  .waitlist-form {
+    display: flex;
+    gap: 10px;
+    margin-top: 28px;
+    max-width: 440px;
+  }
+
+  .waitlist-form input {
+    flex: 1;
+    padding: 14px 20px;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    background: var(--white);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .waitlist-form input:focus {
+    border-color: var(--sage);
+  }
+
+  .waitlist-form input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .waitlist-form button {
+    padding: 14px 28px;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    border-radius: 100px;
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  .waitlist-form button:hover {
+    background: var(--sage);
+    color: var(--white);
+  }
+
+  .cta-card .waitlist-form {
+    flex-direction: column;
+    max-width: 100%;
+  }
+
+  .cta-card .waitlist-form input {
+    width: 100%;
+  }
+
+  .cta-card .waitlist-form button {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  @media (max-width: 500px) {
+    .waitlist-form {
+      flex-direction: column;
+    }
+    .hero-actions {
+      justify-content: center;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ Disclaimer ═══ -->
+<div class="disclaimer-bar">
+  Clarity is an educational tool, not a substitute for professional medical advice.
+</div>
+
+<!-- ═══ Navigation ═══ -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">clarity<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#therapists" class="nav-cta">For therapists</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ═══ Hero ═══ -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-label">Patient health education, done right</div>
+      <h1>Understand your health, at <em>your pace</em></h1>
+      <p class="hero-sub">A guided way to explore your diagnosis, treatments, and next steps — with clear explanations that adapt to what you already know.</p>
+      <div class="hero-actions">
+        <a href="#therapists" class="btn-primary">I'm a therapist →</a>
+        <a href="#patients" class="btn-secondary">I'm a patient</a>
+      </div>
+    </div>
+    <div class="hero-mockup-wrap">
+      <div class="hero-mockup">
+        <div class="mockup-bar">
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+          <div class="mockup-dot"></div>
+        </div>
+        <div class="mockup-content">
+          <div class="mockup-topic-label">Exploring</div>
+          <div class="mockup-topic-title">What are SSRIs?</div>
+          <div class="mockup-meta">
+            <span>Mental Health</span>
+            <div class="mockup-meta-dot"></div>
+            <span>4 min read</span>
+          </div>
+          <div class="mockup-body">
+            SSRIs (Selective Serotonin Reuptake Inhibitors) are the most commonly prescribed type of <a class="mockup-link">antidepressant</a>. They work by increasing the amount of <a class="mockup-link">serotonin</a> available in your brain — a chemical messenger that helps regulate mood, sleep, and appetite.<br><br>
+            Unlike older antidepressants, SSRIs tend to have <a class="mockup-link">fewer side effects</a> and are considered safe for long-term use.
+          </div>
+          <div class="mockup-suggestions">
+            <div class="mockup-suggestions-label">Keep exploring</div>
+            <div class="mockup-suggestion">How long do SSRIs take to work?</div>
+            <div class="mockup-suggestion">Common side effects to expect</div>
+            <div class="mockup-suggestion">SSRIs vs SNRIs — what's the difference?</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Problem ═══ -->
+<section class="problem">
+  <div class="container">
+    <div class="problem-grid">
+      <div class="problem-left reveal">
+        <div class="section-eyebrow">The problem</div>
+        <h2 class="section-heading">Your patients Google their diagnosis and <em>spiral</em></h2>
+        <p class="section-body">Between sessions, patients turn to the internet to understand their condition. What they find is overwhelming, contradictory, and often anxiety-inducing. You spend valuable session time re-explaining things that a better resource could handle.</p>
+      </div>
+      <div class="problem-cards">
+        <div class="problem-card reveal">
+          <div class="problem-card-icon" style="font-size: 14px; color: var(--sage); font-weight: 600;">01</div>
+          <h4>WebMD rabbit holes</h4>
+          <p>Patients read one symptom and convince themselves of the worst. Static articles don't adapt to their specific situation or level of understanding.</p>
+        </div>
+        <div class="problem-card reveal">
+          <div class="problem-card-icon" style="font-size: 14px; color: var(--sage); font-weight: 600;">02</div>
+          <h4>Repeated explanations</h4>
+          <p>You explain what serotonin does. Next week, they've forgotten. There's no persistent, adaptive resource they can revisit between sessions.</p>
+        </div>
+        <div class="problem-card reveal">
+          <div class="problem-card-icon" style="font-size: 14px; color: var(--sage); font-weight: 600;">03</div>
+          <h4>Information overwhelm</h4>
+          <p>Medical jargon, contradictory advice, and ten open tabs. Patients deserve a calm, guided path through their health information.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ How It Works ═══ -->
+<section class="how" id="how">
+  <div class="container">
+    <div class="how-header reveal">
+      <div class="section-eyebrow">How it works</div>
+      <h2 class="section-heading">A guided path, not a search result</h2>
+      <p class="section-body" style="margin: 16px auto 0; text-align: center;">Clarity turns dense medical information into a calm, branching exploration that adapts to each person.</p>
+    </div>
+    <div class="how-steps">
+      <div class="how-step reveal">
+        <div class="how-step-number">1</div>
+        <h3>Start anywhere</h3>
+        <p>Type a diagnosis, medication, symptom, or question. Clarity gives you a clear explanation written at the right level.</p>
+      </div>
+      <div class="how-step reveal">
+        <div class="how-step-number">2</div>
+        <h3>Follow the links</h3>
+        <p>Every explanation contains highlighted terms. Click any one to branch deeper — each new page adapts based on what you've already explored.</p>
+      </div>
+      <div class="how-step reveal">
+        <div class="how-step-number">3</div>
+        <h3>See your journey</h3>
+        <p>Your exploration builds a visual map of everything you've learned. Revisit any concept, dig deeper, or share your path with your therapist.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Features ═══ -->
+<section class="features" id="features">
+  <div class="container">
+    <div class="features-header reveal">
+      <div class="section-eyebrow">Features</div>
+      <h2 class="section-heading">Built for understanding, not just <em>information</em></h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="color: var(--sage); font-size: 18px; font-weight: 600;">A</div>
+        <h3>Adaptive explanations</h3>
+        <p>Clarity remembers what you've already explored and adjusts every explanation accordingly. No repeated basics, no confusing jumps.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="color: var(--sage); font-size: 18px; font-weight: 600;">M</div>
+        <h3>Visual knowledge map</h3>
+        <p>See your entire learning journey as an interactive map. Understand how concepts connect and revisit any topic with one click.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="color: var(--sage); font-size: 18px; font-weight: 600;">Q</div>
+        <h3>Deep-dive conversations</h3>
+        <p>Have follow-up questions about a specific topic? Ask them in context and get answers that build on what you've already read.</p>
+      </div>
+      <div class="feature-card reveal">
+        <div class="feature-icon" style="color: var(--sage); font-size: 18px; font-weight: 600;">S</div>
+        <h3>Safe and responsible</h3>
+        <p>Built-in crisis detection, clear medical disclaimers, and content written at accessible reading levels. Education, never diagnosis.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Dual CTA ═══ -->
+<section class="dual-cta" id="therapists">
+  <div class="container">
+    <div class="dual-cta-grid">
+      <div class="cta-card cta-therapist reveal">
+        <div class="cta-card-eyebrow">For therapists</div>
+        <h3>Give your patients a better place to learn</h3>
+        <p>Recommend Clarity to your patients as a between-session resource. Reduce time spent on psychoeducation and start sessions with more informed conversations.</p>
+        <div class="waitlist-form" style="max-width: 100%;">
+          <input type="email" placeholder="Your work email" style="background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.25); color: var(--white);">
+          <button style="background: var(--white); color: var(--sage);">Join waitlist</button>
+        </div>
+      </div>
+      <div class="cta-card cta-patient reveal" id="patients">
+        <div class="cta-card-eyebrow">For patients</div>
+        <h3>Understand your health on your terms</h3>
+        <p>Whether you just received a diagnosis or want to learn more about your treatment, Clarity guides you through it — calmly, clearly, and at your pace.</p>
+        <div class="waitlist-form" style="max-width: 100%;">
+          <input type="email" placeholder="Your email" style="background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.25); color: var(--white);">
+          <button style="background: var(--white); color: var(--sage);">Get early access</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FAQ ═══ -->
+<section class="faq" id="faq">
+  <div class="container">
+    <div class="faq-header reveal">
+      <div class="section-eyebrow">FAQ</div>
+      <h2 class="section-heading">Common questions</h2>
+    </div>
+    <div class="faq-list">
+
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-question">
+          Is Clarity a replacement for therapy?
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">No. Clarity is an educational tool that helps you understand health concepts — it does not provide diagnoses, treatment plans, or therapeutic interventions. Think of it as a better version of the research you're already doing online, designed to be used alongside professional care.</div>
+        </div>
+      </div>
+
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-question">
+          How accurate is the information?
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Clarity uses AI to generate explanations based on established medical and psychological knowledge. Every response includes a reminder that it's educational content, not medical advice. We're continuously working to improve accuracy and add source citations.</div>
+        </div>
+      </div>
+
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-question">
+          What if a patient is in crisis?
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Clarity includes built-in crisis detection. If the system identifies language suggesting a mental health emergency, it immediately surfaces crisis resources including the 988 Suicide & Crisis Lifeline, and encourages the user to contact their provider or emergency services.</div>
+        </div>
+      </div>
+
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-question">
+          Is my data private?
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Yes. Clarity does not store personal health information or share data with third parties. Your exploration history is stored locally on your device by default. Account features use encrypted storage and we do not sell or share user data.</div>
+        </div>
+      </div>
+
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-question">
+          How much does it cost?
+          <span class="faq-toggle">+</span>
+        </div>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">Clarity will offer a free tier for basic exploration. A paid plan will include saved history, deeper dives, and the conversational Q&A feature. Pricing for therapist accounts will include the ability to recommend Clarity to patients and access engagement insights. Exact pricing will be announced at launch.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Footer ═══ -->
+<footer>
+  <div class="container">
+    <div class="footer-logo">clarity<span>.</span></div>
+    <div class="footer-tagline">Understand your health, at your pace.</div>
+    <ul class="footer-links">
+      <li><a href="#">About</a></li>
+      <li><a href="#">Privacy</a></li>
+      <li><a href="#">Terms</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+    <div class="footer-legal">
+      Clarity is an educational tool and does not provide medical advice, diagnosis, or treatment. Always consult a qualified healthcare provider with questions about your health. If you are in crisis, contact the 988 Suicide & Crisis Lifeline by calling or texting 988.
+    </div>
+  </div>
+</footer>
+
+<script>
+  // ── Sticky nav ──
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // ── Scroll reveal ──
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
